@@ -8,48 +8,58 @@
 
 int main(int argc, char** argv) {
     struct option arg_long[] = {
-            {"input",   required_argument,  NULL,  'i'},
-            {"output",  required_argument,  NULL,  'o'},
-            {"action",  required_argument,  NULL,  'a'},
             {"help",    no_argument,        NULL,  'h'},
             {"version", no_argument,        NULL,  'V'},
+            {"input",   required_argument,  NULL,  'i'},
+            {"output",  required_argument,  NULL,  'o'},
     };
-    char arg_opt_str[] = "i:o:a:hV";
+    char arg_opt_str[] = "<:>:a:hV";
     int arg_opt;
     int arg_opt_idx = 0;
     char should_finish = FALSE;
 
+    CommandOptions cmd_opt;
+    CommandCreate(&cmd_opt);
+
     if(argc == 1)
-        should_finish = TRUE;
+        CommandSetError(&cmd_opt);
 
     while((arg_opt =
                    getopt_long(argc, argv, arg_opt_str, arg_long, &arg_opt_idx)) != -1 && !should_finish) {
         switch(arg_opt){
-        	case 'i':
-        		should_finish = TRUE;
-        		break;
-        	case 'o':
-                should_finish = TRUE;
-                break;
         	case 'h':
         		CommandHelp();
-                should_finish = TRUE;
-                break;
+                        should_finish = TRUE;
+                        break;
         	case 'V':
         		CommandVersion();
-                should_finish = TRUE;
-                break;
-        	case 'a':
-        	    should_finish = TRUE;
-				break;
+                        should_finish = TRUE;
+                        break;
+        	case '<':
+			CommandSetInput(&cmd_opt, optarg);
+        	        should_finish = TRUE;
+			break;
+		case '>':
+			CommandSetOutput(&cmd_opt, optarg);
+        	        should_finish = TRUE;
+			break;
         	default:
-        		CommandErrArg();
+        		CommandSetError(&cmd_opt);
         		break;
         }
     }
 
     if(should_finish)
         return 0;
+
+    if(!CommandHasError(&cmd_opt)) {
+	/*  Si no hubo error aca llamar a las funciones para multiplicar*/
+        CommandProcess(&cmd_opt);
+	return 0;
+    } else {
+        CommandErrArg();
+        return 1;
+    }
 
     return 0;
 }
