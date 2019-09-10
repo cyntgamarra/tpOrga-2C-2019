@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv) {
 
-    struct option arg_long[] = {
+/*    struct option arg_long[] = {
             {"help",    no_argument,        NULL,  'h'},
             {"version", no_argument,        NULL,  'V'},
             {"input",   required_argument,  NULL,  'i'},
@@ -55,14 +55,18 @@ int main(int argc, char** argv) {
         return 0;
 
     if(!CommandHasError(&cmd_opt)) {
-    /*  Si no hubo error aca llamar a las funciones para multiplicar*/
-        process();
+    //  Si no hubo error aca llamar a las funciones para multiplicar
         //CommandProcess(&cmd_opt);
         return 0;
     } else {
         CommandErrArg();
         return 1;
     }
+
+    */
+
+    process();
+
 
     return 0;
 }
