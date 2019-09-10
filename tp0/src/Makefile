@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -o0 -g -Wall -Werror -pedantic -std=c99
 
-OBJECTS = command.o
+OBJECTS = command.o matrix.o file.o
 EXEC = tp0
 
 VALGRIND = valgrind --track-origins=yes --leak-check=full
@@ -9,7 +9,7 @@ VALGRIND-V = $(VALGRIND) -v
 
 all: $(EXEC)
 
-command.o: command.c command.h
+command.o: command.c command.h matrix.c matrix.h file.c file.h
 	$(CC) $(CFLAGS) -c command.c -o command.o
 
 $(EXEC): $(OBJECTS)
