@@ -4,10 +4,11 @@
 
 #include <getopt.h>
 #include "command.h"
+#include "reading.h"
 #include <stddef.h>
 
 int main(int argc, char** argv) {
-    struct option arg_long[] = {
+/*    struct option arg_long[] = {
             {"input",   required_argument,  NULL,  'i'},
             {"output",  required_argument,  NULL,  'o'},
             {"action",  required_argument,  NULL,  'a'},
@@ -50,6 +51,8 @@ int main(int argc, char** argv) {
 
     if(should_finish)
         return 0;
+*/
+    process();
 
     return 0;
 }
