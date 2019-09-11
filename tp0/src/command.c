@@ -30,25 +30,25 @@ void CommandErrArg() {
     fprintf(stderr,"  -V, --version    Print version and quit.\n");
     fprintf(stderr,"  -h, --help       Print this information and quit.\n");
     fprintf(stderr,"Examples:\n");
-    fprintf(stderr,"  tp0 < in.txt > out.txtn");
+    fprintf(stderr,"  tp0 < in.txt > out.txtn\n");
     fprintf(stderr,"  cat in.txt | tp0 > out.txt\n");
 }
 
 void CommandCreate(CommandOptions *opt) {
-    FileCreate(&opt->input);
-    FileCreate(&opt->output);
+    //FileCreate(&opt->input);
+    //FileCreate(&opt->output);    
+    //opt->input_route = 0;
+    //opt->output_route = 0;
     opt->error = FALSE;
-    opt->input_route = 0;
-    opt->output_route = 0;
 }
 
-void CommandSetInput(CommandOptions *opt, const char *input) {
+/*void CommandSetInput(CommandOptions *opt, const char *input) {
     opt->input_route = input;
 }
 
 void CommandSetOutput(CommandOptions *opt, const char *output) {
     opt->output_route = output;
-}
+}*/
 
 void CommandSetError(CommandOptions *opt) {
     opt->error = TRUE;
@@ -58,7 +58,7 @@ char CommandHasError(CommandOptions *opt) {
     return opt->error;
 }
 
-char CommandProcess(CommandOptions *opt) {
+/*char CommandProcess(CommandOptions *opt) {
     opt->error = FileOpenForRead(&opt->input, opt->input_route);
 
     if(!opt->error)
@@ -102,4 +102,4 @@ char _CommandMatrixMultiply(CommandOptions *opt) {
     destroy_matrix(m2);
 
     return opt->error;
-}
+}*/

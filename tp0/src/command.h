@@ -1,16 +1,16 @@
 #ifndef TP0_COMMAND_H
 #define TP0_COMMAND_H
 
-#include "file.h"
+//#include "file.h"
 
 #define FALSE 0
 #define TRUE 1
 
 typedef struct {
-    File input;
-    File output;
-    const char* input_route;
-    const char* output_route;
+    //File input;
+    //File output;
+    //const char* input_route;
+    //const char* output_route;
     char error;
 } CommandOptions;
 
@@ -52,14 +52,14 @@ void CommandCreate(CommandOptions* opt);
  * Pre: ruta valida
  * Post: ruta lista para abrir file
  */
-void CommandSetInput(CommandOptions* opt, const char* input);
+//void CommandSetInput(CommandOptions* opt, const char* input);
 
 /**
  * Setea ruta de salida
  * Pre: ruta valida
  * Post: ruta lista para abrir file
  */
-void CommandSetOutput(CommandOptions* opt, const char* output);
+//void CommandSetOutput(CommandOptions* opt, const char* output);
 
 /**
  * Indica que hubo un error
@@ -77,7 +77,7 @@ char CommandHasError(CommandOptions *opt);
  * Post: Ejecuta el comando generando la salida esperada
  *       Devuelve 0 si error y 1 si OK.
  */
-char CommandProcess(CommandOptions* opt);
+//char CommandProcess(CommandOptions* opt);
 
 /**
  * Recibe los archivos abiertos y debe ejecutar la operacion de multiplicacion
@@ -85,6 +85,6 @@ char CommandProcess(CommandOptions* opt);
  *      opt->output posee el stream de salida
  * Post: Datos procesados y escritos en el stream, si error devuelve 0, sino 1.
  */
-char _CommandMatrixMultiply(CommandOptions *opt);
+//char _CommandMatrixMultiply(CommandOptions *opt);
 
 #endif //TP0_COMMAND_H
