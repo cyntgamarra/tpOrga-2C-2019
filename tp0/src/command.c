@@ -35,20 +35,8 @@ void CommandErrArg() {
 }
 
 void CommandCreate(CommandOptions *opt) {
-    //FileCreate(&opt->input);
-    //FileCreate(&opt->output);    
-    //opt->input_route = 0;
-    //opt->output_route = 0;
     opt->error = FALSE;
 }
-
-/*void CommandSetInput(CommandOptions *opt, const char *input) {
-    opt->input_route = input;
-}
-
-void CommandSetOutput(CommandOptions *opt, const char *output) {
-    opt->output_route = output;
-}*/
 
 void CommandSetError(CommandOptions *opt) {
     opt->error = TRUE;
@@ -57,49 +45,3 @@ void CommandSetError(CommandOptions *opt) {
 char CommandHasError(CommandOptions *opt) {
     return opt->error;
 }
-
-/*char CommandProcess(CommandOptions *opt) {
-    opt->error = FileOpenForRead(&opt->input, opt->input_route);
-
-    if(!opt->error)
-        opt->error = FileOpenForWrite(&opt->output, opt->output_route);
-
-    if(!opt->error){
-        opt->error = _CommandMatrixMultiply(opt);
-        FileClose(&opt->input);
-        FileClose(&opt->output);
-    }
-    else {
-        FileClose(&opt->input);
-    }
-    return opt->error;
-}
-
-char _CommandMatrixMultiply(CommandOptions *opt) {
-    unsigned char buf_decoded[3];
-    unsigned char buf_encoded[4];
-    unsigned char count = 0;
-    matrix_t* m1 = create_matrix(2,2);
-    matrix_t* m2 = create_matrix(2,2);
-
-
-
-    while(!FileEofReached(&opt->input)){
-	memset(buf_decoded, 0, 3);
-	unsigned int read = FileRead(&opt->input, buf_decoded, 3);
-	if (read > 0) {
-		matrix_multiply(m1, m2);
-                FileWrite(&opt->output, buf_encoded, 4);
-                ++count;
-                if (count == 18) { // 19 * 4 = 76 bytes
-                    FileWrite(&opt->output, (unsigned char *) "\n", 1);
-                    count = 0;
-                }
-
-	}
-    }
-    destroy_matrix(m1);
-    destroy_matrix(m2);
-
-    return opt->error;
-}*/

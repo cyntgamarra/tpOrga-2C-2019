@@ -37,7 +37,6 @@ int main(int argc, char** argv) {
         return 0;
 
     if(!CommandHasError(&cmd_opt)) {
-    //  Si no hubo error aca llamar a las funciones para multiplicar
         if (!process()){
             return 1;
         }
