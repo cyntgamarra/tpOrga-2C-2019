@@ -245,12 +245,6 @@ ctnue:
 	b cont_matrix_mult
 
 
-
-
-
-
-
-
 .end matrix_multiply
 .size  matrix_multiply, .-matrix_multiply
 
