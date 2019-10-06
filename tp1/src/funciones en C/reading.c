@@ -1,5 +1,7 @@
 #include "reading.h"
 
+extern matrix_t* matrix_multiply(matrix_t* m1, matrix_t* m2);
+
 // Devuelve true si lo siguiente a leer por stdin
 // es "\n" (new line) o " \n" (espacio + new line).
 // De lo contrario devuelve false.
@@ -22,7 +24,8 @@ bool is_next_new_line(){
 
 bool read_matrix_array(int n, double* array){
 	int len = n * n;
-	for (int i = 0; i < len; i++){
+	int i = 0;
+	for (i = 0; i < len; i++){
 		if (scanf("%lg", &(array[i])) <= 0){
 			fprintf(stderr, "Error al leer archivo\n");
 			return false;
@@ -70,7 +73,7 @@ bool read_and_multiply(int n){
 	}
 	destroy_matrix(m1);
 	destroy_matrix(m2);
-	destroy_matrix(m3);
+	destroy_my_matrix(m3);
 	return ret;
 }
 

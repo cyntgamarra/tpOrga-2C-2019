@@ -9,27 +9,28 @@
 #define ARG3 12
 
 //# Local and Temporary Area (LTA).
-#define new 16
-#define r1 20
-#define c2 24
+#define new 28
+#define r1 24
+#define c2 20
 #define sum 28 # en realidad es float
-#define r2 32
+#define r2 16
 #define index_m1 36 # no es necesario. o es convención??
 #define index_m2 40 # idem
 #define index_new 44 # idem#
 
 //# Saved-registers area (SRA).
-#define GP 48
-#define FP 52
-#define RA 56
+#define GP 32
+#define FP 36
+#define RA 40
+
 #define PADDING_1 60 # que es padding ???
 
 ## ABA caller.
-#define m1 64
-#define m2 68
+#define m1 44
+#define m2 48
 
 //# Calles Stack frame size 
-#define SIZE_SF 70
+#define SIZE_SF 48
 
 
 ##t0 : i
@@ -101,7 +102,7 @@ forRowsM1:
 	lw t0 , m1($fp)          		##t0 : &m1
 	lw t1 , 0(t0)            		##t1 : m1− >rows
 	lw t0 , r1($fp)			 		##t0 : r1
-	bge t0 , t1 , return_not_null ##if r1 >= m1->rows 
+	bge t0 , t1 , return_not_null   ##if r1 >= m1->rows 
 	
 	##c2 = 0
 	li t2 , 0
@@ -123,10 +124,11 @@ forRowsM2:
 	lw t3, m2($fp)					##t3 : &m2
 	lw t4, 0(t3)					##t4 : m2->rows
 	lw t3, r2($fp)					##t3 : r2
-	bge t3, t4, end_forRowsM2   			##if r2 >= m2->rows
+	bge t3, t4, end_forRowsM2   	##if r2 >= m2->rows
 
+	lw t3, m2($fp)					##t3 : &m2
 	lw t4, 4(t3)					##t4 : m2->cols
-	lw t0 , m1($fp)          		##t0 : &m1
+	lw t0, m1($fp)          		##t0 : &m1
 	lw t1 , 4(t0)            		##t1 : m1− >cols
 	lw t2, r1($fp)					##t2 : r1
 	lw t5, r2($fp)					##t5 : r2
@@ -136,21 +138,25 @@ forRowsM2:
 	addu t7, t7, t5					##t7 : t7 + r2  #(t7=index_m1)
 
 	addi t0, t0, 8					##t0 : &(m1->array)
+	lw t0, 0(t0)
+	mul t7, t7, 8
 	addu t0, t0, t7					##t0 : &(m1->array[index_m1])				
 
-	l.d $f2, 0(t0)						##f2 : m1->array[index_m1]
+	l.d $f2, 0(t0)					##f2 : m1->array[index_m1]
 
 	mul t7, t5, t4					##t7 : r2 * m2->cols
 	addu t7, t7, t6					##t7 : t7 + c2 #(t7=index_m2)
 
 	lw t1, m2($fp)					##t1 : &m2
 	addi t1, t1, 8					##t1 : &(m2->array)
+	lw t1, 0(t1)
+	mul t7, t7, 8
 	addu t1, t1, t7					##t1 : &(m2->array[index_m2])
 
   	l.d $f4, 0(t1)						##f4 : m2->array[index_m2]
 
-	mul.d $f2, $f2, $f4					##f4 : m1->array[index_m1] * m2->array[index_m2]
-	add.d $f0, $f0, $f4					#f0 : f0 + f4
+	mul.d $f2, $f2, $f4					##f2 : m1->array[index_m1] * m2->array[index_m2]
+	add.d $f0, $f0, $f2					#f0 : f0 + f2
 
 	##r2++
 	lw t3, r2($fp)
@@ -169,6 +175,8 @@ end_forRowsM2:
 
 	lw t0, new($fp)					##t0 : &new
 	addi t0, t0, 8					#t0 : &(new->array)
+	lw t0, 0(t0)
+	mul t1, t1, 8
 	addu t0, t0, t1					##t0 : &(new->array[new_index])
 	s.d $f0, 0(t0)					##new->array[new_index] = f0 #(f0=sum)
 
@@ -180,10 +188,14 @@ end_forRowsM2:
 	b forCols
 
 end_forCols:
+	##r1++
+	lw t3, r1($fp)
+	addi t3, t3, 1
+	sw t3, r1($fp)
 	b forRowsM1
 
 return_null:
-	lw v0 , 0
+	li v0 , 0
 	b exit_function
 
 return_not_null:
@@ -208,30 +220,28 @@ _create_matrix:
 	li t0, 3
 	li t1, 4
 	mul a0, t0, t1 # 3 args de 4 bytes
-	jal malloc
+	jal mymalloc
 	sw v0 , new($fp)
 	beqz v0 , return_null  # if (!new) return null
 
 	lw t0 , m1($fp)          #t0 : &m1
 	lw t0 , 0(t0)            #t0 : m1− >rows 
 
-	lw t1, new($fp)			 # t1 = &new->rows
-	sw t0, new($fp)			 #new->rows = m1->rows
-	addi t1, t1, 4			 #t1 = &(new->cols)
-	sw t0, 0(t1)			 #new->cols = m1->cols = m1->rows (??????????)
-
+	lw t1, new($fp)			 #t1 = &new->rows
+	sw t0, 0(t1)			 #new->rows = t0 = m1->rows
+	sw t0, 4(t1)			 #new->cols = t0 = m1->cols
+	
 	mul a0, t0, 8			 # sizeof(double) * rows
 	mul a0, a0, t0			 # a0 *= cols
-	jal malloc
+	jal mymalloc
 	bnez v0 , ctnue  # if (!new) return null
 free_mtrx:
 	lw a0, new($fp)
-	jal free
+	jal myfree
 	b return_null
 ctnue:
 	lw t1, new($fp)			 # t1 = &new->rows
-	addi t1, t1, 8			 # t1 = &(new->array)
-	sw v0, 0(t1)				 # new->array = malloc(array) (?????)
+	sw v0, 8(t1)		 	 #new->array = malloc()
 	b cont_matrix_mult
 
 

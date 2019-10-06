@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include "mymalloc.h"
 
 matrix_t* create_matrix(size_t rows, size_t cols){
     matrix_t* m = (matrix_t*)malloc(sizeof(matrix_t));
@@ -15,6 +16,11 @@ matrix_t* create_matrix(size_t rows, size_t cols){
     return m;
 }
 
+void destroy_my_matrix(matrix_t* m){
+    myfree(m->array);
+    myfree(m);
+}
+
 void destroy_matrix(matrix_t* m){
     free(m->array);
     free(m);
@@ -26,8 +32,10 @@ int print_matrix(FILE* fp, matrix_t* m){
        return -1;
     }
 
-    for (int r = 0; r < m->rows; r++){
-        for (int c = 0; c < m->cols; c++){
+    int r = 0;
+    for (r = 0; r < m->rows; r++){
+        int c = 0;
+        for (c = 0; c < m->cols; c++){
             size_t i = (r * (m->cols)) + c;
             correct = fprintf(fp, "%g ", m->array[i]);
             if (correct < 0){
@@ -43,7 +51,7 @@ int print_matrix(FILE* fp, matrix_t* m){
     return 0;
 }
 
-matrix_t* matrix_multiply(matrix_t* m1, matrix_t* m2){
+/*matrix_t* matrix_multiply(matrix_t* m1, matrix_t* m2){
     matrix_t* new = create_matrix(m1->rows, m1->cols);
     if (!new){
         return NULL;
@@ -67,4 +75,4 @@ matrix_t* matrix_multiply(matrix_t* m1, matrix_t* m2){
 
     return new;
 }
-
+*/
