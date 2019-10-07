@@ -1,0 +1,2 @@
+Error al leer archivo
+2 9 12 6 8 
