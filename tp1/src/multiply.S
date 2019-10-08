@@ -12,18 +12,14 @@
 #define new 28
 #define r1 24
 #define c2 20
-#define sum 28 # en realidad es float
 #define r2 16
-#define index_m1 36 # no es necesario. o es convención??
-#define index_m2 40 # idem
-#define index_new 44 # idem#
 
 //# Saved-registers area (SRA).
 #define GP 32
 #define FP 36
 #define RA 40
 
-#define PADDING_1 60 # que es padding ???
+#define PADDING_1 60
 
 ## ABA caller.
 #define m1 44
