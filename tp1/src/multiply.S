@@ -28,16 +28,6 @@
 //# Calles Stack frame size 
 #define SIZE_SF 48
 
-
-##t0 : i
-##t1 : n
-##t2 : &m1
-##t3 : &m2
-##t4 : offset
-##t5 :
-##t6 : &m
-
-
 .abicalls
 .text
 .align  2
