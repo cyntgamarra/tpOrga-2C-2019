@@ -80,28 +80,25 @@ matrix_multiply :
 	sw a1 , m2($fp) 
 
 ##############################
-## body:     matrix_multiply  #
+## body:    matrix_multiply ##
 ##############################
 
-	lw t0 , m1($fp)          ##t0 : &m1
-	lw t1 , 0(t0)            ##t1 : m1− >rows
+	lw t0 , m1($fp)          	##t0 : &m1
+	lw t1 , 0(t0)          		##t1 : m1− >rows
 	addi t0 , t0 , 4 
-	lw t2 , 0(t0)            ##t2 : m1− >cols
-	mul t3 , t1 , t2         ##t3 : m1− >rows ∗m1− >cols  ?? 
+	lw t2 , 0(t0)            	##t2 : m1− >cols
+	mul t3 , t1 , t2         	##t3 : m1− >rows ∗m1− >cols
 
-	//#lw a0 , t1 
-	//#lw a1 , t2 
 	b _create_matrix
 cont_matrix_mult:
 	li t0 , 0
 	sw t0 , r1($fp)
 
-##
 
 forRowsM1:
-	lw t0 , m1($fp)          		##t0 : &m1
-	lw t1 , 0(t0)            		##t1 : m1− >rows
-	lw t0 , r1($fp)			 		##t0 : r1
+	lw t0 , m1($fp)          	##t0 : &m1
+	lw t1 , 0(t0)            	##t1 : m1− >rows
+	lw t0 , r1($fp)			##t0 : r1
 	bge t0 , t1 , return_not_null   ##if r1 >= m1->rows 
 	
 	##c2 = 0
@@ -109,54 +106,54 @@ forRowsM1:
 	sw t2 , c2($fp)
 
 forCols:
-	lw t3, m2($fp)					##t3 : &m2
-	lw t4, 4(t3)					##t4 : m2->cols
-	lw t3, c2($fp)					##t3 : c2
-	bge t3, t4, end_forCols   			##if c2 >= m2->rows
+	lw t3, m2($fp)			##t3 : &m2
+	lw t4, 4(t3)			##t4 : m2->cols
+	lw t3, c2($fp)			##t3 : c2
+	bge t3, t4, end_forCols   	##if c2 >= m2->rows
 
-	l.d $f0, zeroDouble  			##f0 : 0.0
+	l.d $f0, zeroDouble  		##f0 : 0.0
 
 	##r2 = 0
 	li t2, 0
 	sw t2, r2($fp)
 
 forRowsM2:
-	lw t3, m2($fp)					##t3 : &m2
-	lw t4, 0(t3)					##t4 : m2->rows
-	lw t3, r2($fp)					##t3 : r2
+	lw t3, m2($fp)			##t3 : &m2
+	lw t4, 0(t3)			##t4 : m2->rows
+	lw t3, r2($fp)			##t3 : r2
 	bge t3, t4, end_forRowsM2   	##if r2 >= m2->rows
 
-	lw t3, m2($fp)					##t3 : &m2
-	lw t4, 4(t3)					##t4 : m2->cols
-	lw t0, m1($fp)          		##t0 : &m1
-	lw t1 , 4(t0)            		##t1 : m1− >cols
-	lw t2, r1($fp)					##t2 : r1
-	lw t5, r2($fp)					##t5 : r2
-	lw t6, c2($fp)					##t6 : c2
+	lw t3, m2($fp)			##t3 : &m2
+	lw t4, 4(t3)			##t4 : m2->cols
+	lw t0, m1($fp)          	##t0 : &m1
+	lw t1 , 4(t0)            	##t1 : m1− >cols
+	lw t2, r1($fp)			##t2 : r1
+	lw t5, r2($fp)			##t5 : r2
+	lw t6, c2($fp)			##t6 : c2
 
-	mul t7, t2, t1					##t7 : r1 * m1->cols
-	addu t7, t7, t5					##t7 : t7 + r2  #(t7=index_m1)
+	mul t7, t2, t1			##t7 : r1 * m1->cols
+	addu t7, t7, t5			##t7 : t7 + r2  #(t7=index_m1)
 
-	addi t0, t0, 8					##t0 : &(m1->array)
+	addi t0, t0, 8			##t0 : &(m1->array)
 	lw t0, 0(t0)
 	mul t7, t7, 8
-	addu t0, t0, t7					##t0 : &(m1->array[index_m1])				
+	addu t0, t0, t7			##t0 : &(m1->array[index_m1])				
 
-	l.d $f2, 0(t0)					##f2 : m1->array[index_m1]
+	l.d $f2, 0(t0)			##f2 : m1->array[index_m1]
 
-	mul t7, t5, t4					##t7 : r2 * m2->cols
-	addu t7, t7, t6					##t7 : t7 + c2 #(t7=index_m2)
+	mul t7, t5, t4			##t7 : r2 * m2->cols
+	addu t7, t7, t6			##t7 : t7 + c2 #(t7=index_m2)
 
-	lw t1, m2($fp)					##t1 : &m2
-	addi t1, t1, 8					##t1 : &(m2->array)
+	lw t1, m2($fp)			##t1 : &m2
+	addi t1, t1, 8			##t1 : &(m2->array)
 	lw t1, 0(t1)
 	mul t7, t7, 8
-	addu t1, t1, t7					##t1 : &(m2->array[index_m2])
+	addu t1, t1, t7			##t1 : &(m2->array[index_m2])
 
-  	l.d $f4, 0(t1)						##f4 : m2->array[index_m2]
+  	l.d $f4, 0(t1)			##f4 : m2->array[index_m2]
 
-	mul.d $f2, $f2, $f4					##f2 : m1->array[index_m1] * m2->array[index_m2]
-	add.d $f0, $f0, $f2					#f0 : f0 + f2
+	mul.d $f2, $f2, $f4		##f2 : m1->array[index_m1] * m2->array[index_m2]
+	add.d $f0, $f0, $f2		##f0 : f0 + f2
 
 	##r2++
 	lw t3, r2($fp)
@@ -166,19 +163,19 @@ forRowsM2:
 	b forRowsM2
 
 end_forRowsM2:
-	lw t2, r1($fp)					##t2 : r1
-	lw t0 , m1($fp)          		##t0 : &m1
-	lw t1 , 4(t0)            		##t1 : m1− >cols
-	mul t1, t1, t2					##t1 : m1->cols * r1
-	lw t0, c2($fp)					##t0 : c2
-	addu t1, t1, t0					##t1 : t1 + c2 #(t1=index_new)
+	lw t2, r1($fp)			##t2 : r1
+	lw t0 , m1($fp)          	##t0 : &m1
+	lw t1 , 4(t0)            	##t1 : m1− >cols
+	mul t1, t1, t2			##t1 : m1->cols * r1
+	lw t0, c2($fp)			##t0 : c2
+	addu t1, t1, t0			##t1 : t1 + c2 #(t1=index_new)
 
-	lw t0, new($fp)					##t0 : &new
-	addi t0, t0, 8					#t0 : &(new->array)
+	lw t0, new($fp)			##t0 : &new
+	addi t0, t0, 8			##t0 : &(new->array)
 	lw t0, 0(t0)
 	mul t1, t1, 8
-	addu t0, t0, t1					##t0 : &(new->array[new_index])
-	s.d $f0, 0(t0)					##new->array[new_index] = f0 #(f0=sum)
+	addu t0, t0, t1			##t0 : &(new->array[new_index])
+	s.d $f0, 0(t0)			##new->array[new_index] = f0 #(f0=sum)
 
 	##c2++
 	lw t3, c2($fp)
@@ -224,15 +221,15 @@ _create_matrix:
 	sw v0 , new($fp)
 	beqz v0 , return_null  # if (!new) return null
 
-	lw t0 , m1($fp)          #t0 : &m1
-	lw t0 , 0(t0)            #t0 : m1− >rows 
+	lw t0 , m1($fp)         	##t0 : &m1
+	lw t0 , 0(t0)            	##t0 : m1− >rows 
 
-	lw t1, new($fp)			 #t1 = &new->rows
-	sw t0, 0(t1)			 #new->rows = t0 = m1->rows
-	sw t0, 4(t1)			 #new->cols = t0 = m1->cols
+	lw t1, new($fp)			##t1 = &new->rows
+	sw t0, 0(t1)			##new->rows = t0 = m1->rows
+	sw t0, 4(t1)			##new->cols = t0 = m1->cols
 	
-	mul a0, t0, 8			 # sizeof(double) * rows
-	mul a0, a0, t0			 # a0 *= cols
+	mul a0, t0, 8			## sizeof(double) * rows
+	mul a0, a0, t0			## a0 *= cols
 	jal mymalloc
 	bnez v0 , ctnue  # if (!new) return null
 free_mtrx:
@@ -240,12 +237,12 @@ free_mtrx:
 	jal myfree
 	b return_null
 ctnue:
-	lw t1, new($fp)			 # t1 = &new->rows
-	sw v0, 8(t1)		 	 #new->array = malloc()
+	lw t1, new($fp)			 ##t1 = &new->rows
+	sw v0, 8(t1)		 	 ##new->array = malloc()
 	b cont_matrix_mult
 
 
 .end matrix_multiply
 .size  matrix_multiply, .-matrix_multiply
 
-zeroDouble: .double 0.0 ## esta bien aca??
+zeroDouble: .double 0.0
