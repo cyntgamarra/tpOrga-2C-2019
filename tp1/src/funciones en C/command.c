@@ -5,33 +5,33 @@
 
 void CommandHelp(){
     printf("Usage:\n");
-    printf("  tp0 -h\n");
-    printf("  tp0 -V\n");
-    printf("  tp0 < in_file > out_file\n");
+    printf("  tp1 -h\n");
+    printf("  tp1 -V\n");
+    printf("  tp1 < in_file > out_file\n");
     printf("Options:\n");
     printf("  -V, --version    Print version and quit.\n");
     printf("  -h, --help       Print this information and quit.\n");
     printf("Examples:\n");
-    printf("  tp0 < in.txt > out.txt\n");
-    printf("  cat in.txt | tp0 > out.txt\n");
+    printf("  tp1 < in.txt > out.txt\n");
+    printf("  cat in.txt | tp1 > out.txt\n");
 }
 
 void CommandVersion() {
-    printf("Version: 0.1\n");
+    printf("Version: 1.1\n");
 }
 
 void CommandErrArg() {
     fprintf(stderr, "Invalid Arguments\n");
     fprintf(stderr,"Usage:\n");
-    fprintf(stderr,"  tp0 -h.\n");
-    fprintf(stderr,"  tp0 -V.\n");
-    fprintf(stderr,"  tp0 < in_file > out_file.\n");
+    fprintf(stderr,"  tp1 -h.\n");
+    fprintf(stderr,"  tp1 -V.\n");
+    fprintf(stderr,"  tp1 < in_file > out_file.\n");
     fprintf(stderr,"Options:\n");
     fprintf(stderr,"  -V, --version    Print version and quit.\n");
     fprintf(stderr,"  -h, --help       Print this information and quit.\n");
     fprintf(stderr,"Examples:\n");
-    fprintf(stderr,"  tp0 < in.txt > out.txtn\n");
-    fprintf(stderr,"  cat in.txt | tp0 > out.txt\n");
+    fprintf(stderr,"  tp1 < in.txt > out.txtn\n");
+    fprintf(stderr,"  cat in.txt | tp1 > out.txt\n");
 }
 
 void CommandCreate(CommandOptions *opt) {
